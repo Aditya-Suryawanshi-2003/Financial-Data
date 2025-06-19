@@ -134,17 +134,13 @@ def volatility(ticker: Tick) -> dict:
     return volatility_info
 
 def get_share_info(ticker: Tick) -> dict:
-    """
-    Get the share information for the given ticker.
-
-    Args:
-        ticker (Tick): An instance of the Tick class.
-
-    Returns:
-        dict: A dictionary containing the share information.
-    """
     info = ticker.data.get_info()
-    dt = datetime.datetime.fromtimestamp(info.get('lastSplitDate', 'N/A'))
+    last_split_date = info.get('lastSplitDate')
+    if last_split_date and isinstance(last_split_date, (int, float)):
+        dt = datetime.datetime.fromtimestamp(last_split_date)
+        split_date_str = dt.strftime("%Y-%m-%d")
+    else:
+        split_date_str = 'N/A'
     share_info = {
         'Ticker': ticker.ticker,
         'Company Name': info.get('longName', 'Unknown Company'),
@@ -157,13 +153,14 @@ def get_share_info(ticker: Tick) -> dict:
         'bookValue': info.get('bookValue', 'N/A'),
         'priceToBook': info.get('priceToBook', 'N/A'),
         'Last splitFactor': info.get('lastSplitFactor', 'N/A'),
-        'Last splitDate': dt.strftime("%Y-%m-%d") if info.get('lastSplitDate') else 'N/A',
+        'Last splitDate': split_date_str,
         'Debt to Equity': info.get('debtToEquity', 'N/A'),
         'Revenue per Share': info.get('revenuePerShare', 'N/A'),
         'Return on Assets': info.get('returnOnAssets', 'N/A'),
         'Return on Equity': info.get('returnOnEquity', 'N/A'),
     }
     return share_info
+
 
 def get_financials(ticker: Tick) -> dict:
     """

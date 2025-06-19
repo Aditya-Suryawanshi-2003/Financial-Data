@@ -1,0 +1,10 @@
+[project]
+name = "newproject"
+version = "0.1.0"
+description = "mcp yahoo finance api"
+dependencies = [
+    "datetime>=5.5",
+    "mcp[cli]>=1.9.3",
+    "pandas>=2.3.0",
+    "yfinance>=0.2.62",
+]
